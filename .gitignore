@@ -1,0 +1,45 @@
+# Go build files
+/bin/
+/build/
+/dist/
+/out/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go vendor directory
+/vendor/
+
+# Go workspace file
+go.work
+go.work.sum
+
+# Go module cache
+/pkg/mod/
+
+# IDE/editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+crash.log
+.terraform/
+.terraform.lock.hcl
+
+# Terraform plan output
+*.tfplan
+
+# Local .env files
+.env
+.env.*
+
+# MacOS
+.DS_Store
