@@ -11,6 +11,8 @@
 *.test
 *.out
 
+*.zip
+
 # Go vendor directory
 /vendor/
 
