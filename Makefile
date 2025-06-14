@@ -15,7 +15,7 @@ all: build zip
 
 # Compila o código Go para Linux
 build:
-	GOOS=$(GOOS) GOARCH=$(GOARCH) go build -o $(BUILD_DIR)/$(BINARY_NAME) main.go
+	CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=$(GOARCH) go build -o $(BUILD_DIR)/$(BINARY_NAME) main.go
 
 # Empacota o binário como lambda.zip
 zip: build
