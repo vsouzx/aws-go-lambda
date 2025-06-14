@@ -1,6 +1,6 @@
 resource "aws_api_gateway_rest_api" "hello_gw_api"{
-    name = "facial_recognition_api"
-    description = "REST API for lambda"
+    name = "go_api"
+    description = "REST API for Go lambda"
 
     endpoint_configuration {
       types = ["REGIONAL"]
