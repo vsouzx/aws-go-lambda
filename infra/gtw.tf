@@ -31,9 +31,9 @@ resource "aws_api_gateway_integration" "hello_lambda_integration_get" {
 }
 
 resource "aws_api_gateway_method_response" "hello_response_200_get" {
-  rest_api_id = aws_api_gateway_rest_api.hello_gw_api.id
+  http_method = aws_api_gateway_method.hello_gw_api_method_get.http_method
   resource_id = aws_api_gateway_resource.hello_gw_api_resource.id
-  http_method = aws_api_gateway_method.hello_gw_api.http_method
+  rest_api_id = aws_api_gateway_rest_api.hello_gw_api.id
   status_code = "200"
 }
 
