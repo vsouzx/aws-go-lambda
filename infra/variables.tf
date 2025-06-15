@@ -13,3 +13,7 @@ variable "log_retention_days" {
 variable "db_secret_arn" {
   type = string
 }
+
+variable "vpc_id" {
+    type = string
+}

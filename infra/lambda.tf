@@ -44,6 +44,7 @@ resource "aws_lambda_function" "lambda" {
       DB_USERNAME = local.db_secret.db_username
       DB_PASSWORD = local.db_secret.db_password
       DB_URL      = aws_db_instance.default.endpoint
+      DB_NAME     = aws_db_instance.default.db_name
     }
   }
 }
