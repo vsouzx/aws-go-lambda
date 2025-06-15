@@ -9,11 +9,3 @@ variable "stage_name" {
 variable "log_retention_days" {
     type = number
 }
-
-variable "db_username" {
-    type = string
-}
-
-variable "db_password" {
-    type = string
-}
