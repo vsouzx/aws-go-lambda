@@ -38,6 +38,14 @@ resource "aws_lambda_function" "lambda" {
   handler          = "bootstrap"
   filename         = "lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/lambda.zip")
+
+  environment {
+    variables = {
+      DB_USERNAME = var.db_username
+      DB_PASSWORD = var.db_password
+      DB_URL      = output.rds_endpoint.value
+    }
+  }
 }
 
 resource "aws_cloudwatch_log_group" "example"{
