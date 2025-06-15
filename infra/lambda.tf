@@ -43,7 +43,7 @@ resource "aws_lambda_function" "lambda" {
     variables = {
       DB_USERNAME = local.db_secret.username
       DB_PASSWORD = local.db_secret.password
-      DB_URL      = output.rds_endpoint.value
+      DB_URL      = aws_db_instance.default.endpoint
     }
   }
 }
