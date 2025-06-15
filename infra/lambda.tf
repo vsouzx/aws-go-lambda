@@ -41,8 +41,8 @@ resource "aws_lambda_function" "lambda" {
   
   environment {
     variables = {
-      DB_USERNAME = var.db_username
-      DB_PASSWORD = var.db_password
+      DB_USERNAME = local.db_secret.username
+      DB_PASSWORD = local.db_secret.password
       DB_URL      = output.rds_endpoint.value
     }
   }

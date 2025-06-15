@@ -10,10 +10,6 @@ variable "log_retention_days" {
     type = number
 }
 
-variable "db_username" {
-    type = string
-}
-
-variable "db_password" {
-    type = string
+variable "db_secret_arn" {
+  type = string
 }
