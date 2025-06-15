@@ -3,6 +3,6 @@
 
 ### Funcionalidades
 <p>-Lambda em Golang</p>
-<p>-Provisionamento AWS com <b>Terraform</b> (API Gateway e Lambda)</p>
+<p>-Provisionamento AWS com <b>Terraform</b> (API Gateway, Lambda, RDS)</p>
 <p>-CI/CD com Github Actions</p>
 
