@@ -47,6 +47,12 @@ resource "aws_lambda_function" "lambda" {
       DB_NAME     = aws_db_instance.default.db_name
     }
   }
+
+  vpc_config {
+    subnet_ids         = ["subnet-0417119060c4d0943", "subnet-0ce0261f2c16e7733", "subnet-0263f30e9f8071b6a",
+                         "subnet-0ab0b479fc261d026", "subnet-06016dabbff1e0e0a", "subnet-0d746cbbd27803abf"]
+    security_group_ids = [aws_security_group.lambda_sg.id]
+  }
 }
 
 resource "aws_cloudwatch_log_group" "example"{
