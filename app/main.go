@@ -2,30 +2,14 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"souzalambdago/config"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func main() {
-	mockRequest := events.APIGatewayProxyRequest{
-		QueryStringParameters: map[string]string{
-			"name": "Vinicius",
-		},
-		Headers: map[string]string{
-			"Authorization": "Bearer fake-token",
-		},
-		Path:       "/hello",
-		HTTPMethod: "GET",
-		Body:       "{\"message\": \"Hello, Lambda!\"}",
-	}
-
-	response, err := handler(context.Background(), mockRequest)
-	if err != nil {
-		fmt.Println("Error:", err.Error())
-	}
-	fmt.Print("Response:", response)
+	lambda.Start(handler)
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -34,7 +18,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 		return events.APIGatewayProxyResponse{
 			StatusCode: 500,
 			Body:       err.Error(),
-		}, nil
+		}, err
 	}
 
 	return events.APIGatewayProxyResponse{
