@@ -57,8 +57,7 @@ resource "aws_api_gateway_deployment" "api_deployment" {
 
     # 👇 Adiciona os MÉTODOS (não integrações) como dependência
     depends_on = [ 
-         aws_api_gateway_integration.hello_lambda_integration_get,
-         aws_api_gateway_integration.hello_response_404_get,
+         aws_api_gateway_integration.hello_lambda_integration_get
      ]
 }
 
