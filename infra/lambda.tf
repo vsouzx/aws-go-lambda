@@ -19,7 +19,16 @@ resource "aws_iam_policy" "lambda_logging" {
                     "logs:PutLogEvents"
                 ],
                 "Resource": "arn:aws:logs:*:*:*",
-                "Effect": "Allow"
+                "Effect": "Allow",
+            },
+            {
+                "Action": [
+                    "ec2:CreateNetworkInterface",
+                    "ec2:DescribeNetworkInterfaces",
+                    "ec2:DeleteNetworkInterface"
+                ],
+                "Resource": "*",
+                "Effect": "Allow",
             }
         ]
     }
