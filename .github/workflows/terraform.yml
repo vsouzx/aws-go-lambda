@@ -33,6 +33,7 @@ jobs:
       - name: Compilar e empacotar Lambda Go com Makefile
         run: |
           ls
+          cd app
           make
 
       - name: Setup Terraform
