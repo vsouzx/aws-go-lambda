@@ -4,6 +4,7 @@ import (
 	"context"
 	"souzalambdago/config"
 	"souzalambdago/factory"
+	"souzalambdago/repository"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -14,23 +15,8 @@ func main() {
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-
-	if _, err := config.NewDb(); err != nil {
-		return events.APIGatewayProxyResponse{
-			StatusCode: 500,
-			Body:       err.Error(),
-		}, nil
-	}
-
-	factory := factory.NewFactory()
-
-	svc, ok := factory.GetService(request.HTTPMethod, request.Path)
-	if !ok {
-		return events.APIGatewayProxyResponse{
-			StatusCode: 404,
-			Body:       "Route not found",
-		}, nil
-	}
-
-	return svc.Execute(request)
+	repository := repository.NewTransactionRepository(config.NewDb())
+	factory := factory.NewFactory(repository)
+	service := factory.GetService(request.HTTPMethod, request.Path)
+	return service.Execute(request)
 }

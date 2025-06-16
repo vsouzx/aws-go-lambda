@@ -8,7 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func NewDb() (*sqlx.DB, error) {
+func NewDb() (*sqlx.DB) {
 	dbUsername := os.Getenv("DB_USERNAME")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbEndpoint := os.Getenv("DB_URL")
@@ -20,9 +20,10 @@ func NewDb() (*sqlx.DB, error) {
 	db, err := sqlx.Connect("mysql", dsn)
 	if err != nil {
 		fmt.Printf("Failed to connect to database: %v\n", err)
+		panic("Failed to connect to database: " + err.Error())
 	}else {
 		fmt.Println("Database connection established successfully.")
 	}
 
-	return db, err
+	return db
 }

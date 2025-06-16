@@ -1,6 +1,9 @@
 package factory
 
-import "souzalambdago/service"
+import (
+	"souzalambdago/repository"
+	"souzalambdago/service"
+)
 
 type RouteKey struct {
 	Method string
@@ -8,19 +11,24 @@ type RouteKey struct {
 }
 
 type Factory struct {
-	Routes map[RouteKey]service.Service
+	repository repository.TransactionRepositoryInterface
+	routes map[RouteKey]service.Service
 }
 
-func NewFactory() *Factory {
+func NewFactory(repository repository.TransactionRepositoryInterface) *Factory {
 	return &Factory{
-		Routes: map[RouteKey]service.Service{
+		repository: repository,
+		routes: map[RouteKey]service.Service{
 			{"GET", "/payment"}:  service.NewGetPaymentService(),
-			{"POST", "/payment"}: service.NewCreatePaymentService(),
+			{"POST", "/payment"}: service.NewCreatePaymentService(repository),
 		},
 	}
 }
 
-func (f *Factory) GetService(method, path string) (service.Service, bool) {
-	svc, ok := f.Routes[RouteKey{method, path}]
-	return svc, ok
+func (f *Factory) GetService(method, path string) (service.Service) {
+	svc, ok := f.routes[RouteKey{method, path}]
+	if !ok {
+		panic("Route not found: " + method + " " + path)
+	}
+	return svc
 }
