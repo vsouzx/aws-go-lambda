@@ -5,7 +5,7 @@ GOARCH=amd64
 GOOS=linux
 
 # Caminho de saída
-BUILD_DIR=.
+BUILD_DIR=/app
 ZIP_PATH=../infra/$(ZIP_NAME)
 
 .PHONY: all build zip clean
