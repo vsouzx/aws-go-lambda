@@ -19,7 +19,7 @@ func NewFactory(repository repository.TransactionRepositoryInterface) *Factory {
 	return &Factory{
 		repository: repository,
 		routes: map[RouteKey]service.Service{
-			{"GET", "/payment"}:  service.NewGetPaymentService(),
+			{"GET", "/payment"}:  service.NewGetPaymentService(repository),
 			{"POST", "/payment"}: service.NewCreatePaymentService(repository),
 		},
 	}

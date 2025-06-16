@@ -21,14 +21,17 @@ func NewCreatePaymentService(repository repository.TransactionRepositoryInterfac
 }
 
 func (cps *CreateTransactionService) Execute(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-
-	var payload *dto.CreateTransactionRequest
-	cps.payloadValidation.ValidatePayload(request.Body, &payload)
-
+	var payload dto.CreateTransactionRequest
+	if err := cps.payloadValidation.ValidatePayload(request.Body, &payload); err != nil {
+		return events.APIGatewayProxyResponse{
+			StatusCode: 500,
+			Body:       "Invalid payload: " + err.Error(),
+		}, nil
+	}
+	
 	model := dto.NewTransactionModel(payload)
-
-	err := cps.repository.CreateTransaction(model)
-	if err != nil {
+	
+	if err := cps.repository.CreateTransaction(model); err != nil {
 		return events.APIGatewayProxyResponse{
 			StatusCode: 500,
 			Body:       "Error creating transaction: " + err.Error(),

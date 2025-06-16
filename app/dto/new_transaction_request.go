@@ -16,7 +16,7 @@ type CreateTransactionRequest struct {
 	Description string          `json:"description"`
 }
 
-func NewTransactionModel(request *CreateTransactionRequest) model.Transaction {
+func NewTransactionModel(request CreateTransactionRequest) model.Transaction {
 	return model.Transaction{
 		ID:          uuid.NewString(),
 		FromUserID:  request.FromUserID,
