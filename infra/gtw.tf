@@ -37,6 +37,13 @@ resource "aws_api_gateway_method_response" "hello_response_200_get" {
   status_code = "200"
 }
 
+resource "aws_api_gateway_method_response" "hello_response_404_get" {
+  http_method = aws_api_gateway_method.hello_gw_api_method_get.http_method
+  resource_id = aws_api_gateway_resource.hello_gw_api_resource.id
+  rest_api_id = aws_api_gateway_rest_api.hello_gw_api.id
+  status_code = "404"
+}
+
 resource "aws_api_gateway_deployment" "api_deployment" {
     rest_api_id = aws_api_gateway_rest_api.hello_gw_api.id
 
@@ -50,7 +57,8 @@ resource "aws_api_gateway_deployment" "api_deployment" {
 
     # 👇 Adiciona os MÉTODOS (não integrações) como dependência
     depends_on = [ 
-         aws_api_gateway_integration.hello_lambda_integration_get
+         aws_api_gateway_integration.hello_lambda_integration_get,
+         aws_api_gateway_integration.hello_response_404_get,
      ]
 }
 
