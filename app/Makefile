@@ -6,7 +6,7 @@ GOOS=linux
 
 # Caminho de saída
 BUILD_DIR=.
-ZIP_PATH=infra/$(ZIP_NAME)
+ZIP_PATH=../infra/$(ZIP_NAME)
 
 .PHONY: all build zip clean
 
