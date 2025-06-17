@@ -7,13 +7,13 @@ resource "aws_api_gateway_rest_api" "transaction_gw_api"{
     }
 }
 
-//GET /transaction
 resource "aws_api_gateway_resource" "transaction_gw_api_resource" {
     parent_id       = aws_api_gateway_rest_api.transaction_gw_api.root_resource_id
     path_part       = "transaction"
     rest_api_id     = aws_api_gateway_rest_api.transaction_gw_api.id
 }
 
+//GET /transaction
 resource "aws_api_gateway_method" "transaction_gw_api_method_get" {
     authorization   = "NONE"
     http_method     = "GET"
@@ -38,6 +38,31 @@ resource "aws_api_gateway_method_response" "transaction_response_200_get" {
   status_code = "200"
 }
 
+//POST /transaction
+resource "aws_api_gateway_method" "transaction_gw_api_method_post" {
+    authorization   = "NONE"
+    http_method     = "GET"
+    resource_id     = aws_api_gateway_resource.transaction_gw_api_resource.id
+    rest_api_id     = aws_api_gateway_rest_api.transaction_gw_api.id
+}
+
+resource "aws_api_gateway_integration" "transaction_lambda_integration_post" {
+    http_method = aws_api_gateway_method.transaction_gw_api_method_post.http_method
+    resource_id = aws_api_gateway_resource.transaction_gw_api_resource.id
+    rest_api_id = aws_api_gateway_rest_api.transaction_gw_api.id
+    type        = "AWS_PROXY"
+
+    integration_http_method     = "POST" #para lambda_proxy, sempre deve ser POST
+    uri = aws_lambda_function.lambda.invoke_arn
+}
+
+resource "aws_api_gateway_method_response" "transaction_response_200_post" {
+  http_method = aws_api_gateway_method.transaction_gw_api_method_post.http_method
+  resource_id = aws_api_gateway_resource.transaction_gw_api_resource.id
+  rest_api_id = aws_api_gateway_rest_api.transaction_gw_api.id
+  status_code = "200"
+}
+
 resource "aws_api_gateway_deployment" "api_deployment" {
     rest_api_id = aws_api_gateway_rest_api.transaction_gw_api.id
 
@@ -50,7 +75,8 @@ resource "aws_api_gateway_deployment" "api_deployment" {
     }
 
     depends_on = [ 
-         aws_api_gateway_integration.transaction_lambda_integration_get
+         aws_api_gateway_integration.transaction_lambda_integration_get,
+         aws_api_gateway_integration.transaction_lambda_integration_post
      ]
 }
 
