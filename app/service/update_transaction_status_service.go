@@ -7,6 +7,7 @@ import (
 	"souzalambdago/model"
 	"souzalambdago/repository"
 	"souzalambdago/service/validation"
+	"souzalambdago/util"
 
 	"github.com/aws/aws-lambda-go/events"
 )
@@ -14,55 +15,52 @@ import (
 type UpdateTransactionStatusService struct {
 	repository        repository.TransactionRepositoryInterface
 	payloadValidation validation.PayloadValidation
+	responseUtil      util.ResponseUtil
 }
 
 func NewUpdateTransactionStatusService(repository repository.TransactionRepositoryInterface) *UpdateTransactionStatusService {
 	return &UpdateTransactionStatusService{
 		repository:        repository,
 		payloadValidation: validation.PayloadValidation{},
+		responseUtil:      util.ResponseUtil{},
 	}
 }
 
-func (gps *UpdateTransactionStatusService) Execute(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (utss *UpdateTransactionStatusService) Execute(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	transactionID := request.QueryStringParameters["transaction_id"]
 	if transactionID == "" {
-		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusBadRequest,
-			Body:       "transaction_id é obrigatório",
-		}, nil
+		return utss.responseUtil.BuildResponse(http.StatusInternalServerError, map[string]string{
+			"message": "transaction_id é obrigatório",
+		})
 	}
 
 	var payload dto.UpdateTransactionStatusRequest
-	if err := gps.payloadValidation.ValidatePayload(request.Body, &payload); err != nil {
-		return events.APIGatewayProxyResponse{
-			StatusCode: 500,
-			Body:       "Invalid payload: " + err.Error(),
-		}, nil
+	if err := utss.payloadValidation.ValidatePayload(request.Body, &payload); err != nil {
+		return utss.responseUtil.BuildResponse(http.StatusInternalServerError, map[string]string{
+			"message": fmt.Sprintf("Invalid payload:  %s", err.Error()),
+		})
 	}
 
-	transaction, err := gps.repository.GetTransactionById(transactionID)
+	transaction, err := utss.repository.GetTransactionById(transactionID)
 	if err != nil {
-		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusInternalServerError,
-			Body:       fmt.Sprintf("Error getting transaction by id: %s", transactionID),
-		}, nil
+		return utss.responseUtil.BuildResponse(http.StatusBadRequest, map[string]string{
+			"message": fmt.Sprintf("Error retrieving transaction: %s", err.Error()),
+		})
 	}
 
 	if transaction == (model.Transaction{}) {
-		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusNotFound,
-			Body:       fmt.Sprintf("Transaction not found: %s", transactionID),
-		}, nil
+		return utss.responseUtil.BuildResponse(http.StatusBadRequest, map[string]string{
+			"message": fmt.Sprintf("Transaction not found: %s", transactionID),
+		})
 	}
 
-	if err := gps.repository.UpdateTransactionStatus(payload.Status, transactionID); err != nil {
-		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusBadRequest,
-			Body:       fmt.Sprintf("Error updating transaction status: %s", err.Error()),
-		}, nil
+	if err := utss.repository.UpdateTransactionStatus(payload.Status, transactionID); err != nil {
+		return utss.responseUtil.BuildResponse(http.StatusInternalServerError, map[string]string{
+			"error": fmt.Sprintf("Error updating transaction status: %s", err.Error()),
+		})
 	}
 
-	return events.APIGatewayProxyResponse{
-		StatusCode: 201,
-	}, nil
+	return utss.responseUtil.BuildResponse(http.StatusOK, map[string]string{
+		"message": fmt.Sprintf("Transaction status updated successfully: %s", transactionID),
+	})
 }
