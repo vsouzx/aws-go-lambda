@@ -1,2 +1,2 @@
 bootstrap
-*.sh
+app/setup-local.sh
