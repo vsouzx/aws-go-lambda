@@ -41,7 +41,7 @@ resource "aws_api_gateway_method_response" "transaction_response_200_get" {
 //POST /transaction
 resource "aws_api_gateway_method" "transaction_gw_api_method_post" {
     authorization   = "NONE"
-    http_method     = "GET"
+    http_method     = "POST"
     resource_id     = aws_api_gateway_resource.transaction_gw_api_resource.id
     rest_api_id     = aws_api_gateway_rest_api.transaction_gw_api.id
 }
