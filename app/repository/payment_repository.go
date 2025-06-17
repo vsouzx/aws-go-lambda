@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"database/sql"
 	"fmt"
 	"souzalambdago/model"
 
@@ -8,8 +9,10 @@ import (
 )
 
 type TransactionRepositoryInterface interface {
+	GetTransactionById(transactionId string) (model.Transaction, error)
 	CreateTransaction(model model.Transaction) error
 	GetTransactionsByFromUser(fromUserId int) ([]model.Transaction, error)
+	UpdateTransactionStatus(status string, transactionId string) error
 }
 
 type TransactionRepository struct {
@@ -20,6 +23,19 @@ func NewTransactionRepository(db *sqlx.DB) *TransactionRepository {
 	return &TransactionRepository{
 		db: db,
 	}
+}
+
+func (pr *TransactionRepository) GetTransactionById(transactionId string) (model.Transaction, error) {
+	var transaction model.Transaction
+	err := pr.db.Get(&transaction, `SELECT * FROM transactions WHERE id = ?`, transactionId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return model.Transaction{}, nil // Return empty transaction if not found
+		}
+		fmt.Printf("Error getting transaction by id: %s", err.Error())
+		return model.Transaction{}, err
+	}
+	return transaction, nil
 }
 
 func (pr *TransactionRepository) CreateTransaction(model model.Transaction) error {
@@ -40,4 +56,15 @@ func (pr *TransactionRepository) GetTransactionsByFromUser(fromUserId int) ([]mo
 		return nil, err
 	}
 	return transactions, nil
+}
+
+func (pr *TransactionRepository) UpdateTransactionStatus(status string, transactionId string) error {
+	_, err := pr.db.Exec(`UPDATE transactions
+						  SET status = ?
+						  WHERE id = ?`, status, transactionId)
+	if err != nil {
+		fmt.Println("Error updating transaction status:", err.Error())
+		return err
+	}
+	return nil
 }

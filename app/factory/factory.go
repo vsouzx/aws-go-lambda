@@ -21,6 +21,7 @@ func NewFactory(repository repository.TransactionRepositoryInterface) *Factory {
 		routes: map[RouteKey]service.Service{
 			{"GET", "/payment"}:  service.NewGetPaymentService(repository),
 			{"POST", "/payment"}: service.NewCreatePaymentService(repository),
+			{"PATCH", "/payment"}: service.NewUpdateTransactionStatusService(repository),
 		},
 	}
 }
