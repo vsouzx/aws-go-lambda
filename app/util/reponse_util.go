@@ -6,9 +6,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 )
 
-type ResponseUtil struct{}
-
-func (ru *ResponseUtil) BuildResponse(statusCode int, body interface{}) (events.APIGatewayProxyResponse, error) {
+func BuildResponse(statusCode int, body interface{}) (events.APIGatewayProxyResponse, error) {
 	responseJson, err := json.Marshal(body)
 
 	if err != nil {

@@ -15,7 +15,9 @@ func main() {
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	repository := repository.NewTransactionRepository(config.NewDb())
+	db := config.NewDb()
+	defer db.Close()
+	repository := repository.NewTransactionRepository(db)
 	factory := factory.NewFactory(repository)
 	service := factory.GetService(request.HTTPMethod, request.Path)
 	return service.Execute(request)

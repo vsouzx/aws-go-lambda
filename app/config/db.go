@@ -21,6 +21,5 @@ func NewDb() (*sqlx.DB) {
 		fmt.Printf("Failed to connect to database: %v\n", err)
 		panic("Failed to connect to database: " + err.Error())
 	}
-
 	return db
 }
